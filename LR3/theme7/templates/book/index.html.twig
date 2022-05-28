@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Book index{% endblock %}
+
+{% block body %}
+    <span class="d-inline-flex align-items-center mb-5">
+        <h1 class="me-3">Каталог книг</h1>
+        {% if app.user %}
+            <a href="{{ path('app_book_new') }}" class="btn btn-outline-info">
+                Добавить
+            </a>
+        {% endif %}
+    </span>
+    <table class="table primary-table">
+        <tbody>
+        {% for book in books %}
+            <tr class="border">
+                <td class="p-4">
+                    <a href="{{ path('app_book_show', {'id': book.id}) }}" class="h3 mb-2">
+                        {{ book.title }}
+                    </a>
+                    <p>Автор: {{ book.author }}</p>
+                    <p>Прочитано: {{ book.dateRead ? book.dateRead|date('Y-m-d H:i:s') : '' }}</p>
+
+                    {% if app.user %}
+                        <a href="{{ path('app_book_edit', {'id': book.id}) }}" class="btn btn-outline-primary mb-2">Редактировать</a>
+                        {{ include('book/_delete_form.html.twig') }}
+                    {% endif %}
+                </td>
+                <td><img src="/{{ book.coverUrl }}" alt="обложка" style="width: 300px"></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">No books found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

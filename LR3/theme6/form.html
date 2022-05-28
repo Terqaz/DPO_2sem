@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Форма обратной связи </title>
+    <link rel="stylesheet" href="style.css">
+    <script
+            src="https://code.jquery.com/jquery-3.6.0.js"
+            integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous"></script>
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <div class="content">
+        <form id="form" class="form" name="form" method="post">
+            <h3 class="content__header">Отправить комментарий</h3>
+            <label for="formFio" class="form__label"> Ваше ФИО </label>
+            <input type="text" name="fio" id="formFio" class="form__input" placeholder="Фамилия Имя Отчество">
+
+            <label for="formEmail" class="form__label"> Email </label>
+            <input type="text" name="email" id="formEmail" class="form__input" placeholder="example@site.com">
+
+            <label for="formPhone" class="form__label"> Телефон </label>
+            <input type="text" name="phone" id="formPhone" class="form__input" placeholder="+7 *** *** ** **">
+
+            <label for="formComment" class="form__label"> Комментарий </label>
+            <textarea name="comment" id="formComment" class="form__input" cols="40" rows="5" placeholder="Ваш комментарий..."></textarea>
+            <input type="submit" id="submitBtn" class="form__submit" value="Отправить">
+            <p id="formError" class="form__error"></p>
+        </form>
+        <div id="message" class="message">
+            <h3 class="content__header">
+                Оставлено сообщение из формы обратной связи.
+            </h3>
+            <!-- p tags here-->
+        </div>
+    </div>
+</body>
+</html>
