@@ -12,8 +12,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+// Контроллер для регистрации
 class RegistrationController extends AbstractController
 {
+    /** Зарегистрировать нового пользователя.
+     * @param $request - HTTP-запрос
+     * @param $userPasswordHasher - хеширователь пароля пользователя
+     * @param $entityManager - менеджер для связи экзепляров сущностей модели и БД
+     * @return Response - HTTP-ответ. Форма для регистрации пользователя или редирект на обработчик для получения каталога книг
+     */
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {

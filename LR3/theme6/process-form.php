@@ -3,6 +3,9 @@
 require_once './src/LandingPdo.php';
 require_once './src/Validator.php';
 
+/** Отправка JSON HTTP-ответа
+ * @param mixed $data - данные, сериализуемые в JSON
+ */
 function sendJson(mixed $data): void
 {
     http_response_code(200);
@@ -11,15 +14,20 @@ function sendJson(mixed $data): void
     exit;
 }
 
+/** Отправка HTTP-ответа с ошибкой
+ * @param mixed $error - текст ошибки
+ */
 function sendError(string $error): void
 {
     sendJson(['success' => false, 'error' => $error]);
 }
 
+// Экранируем символы в запросе
 $data = array_map(function ($field) {
     return htmlspecialchars($field);
 }, $_POST);
 
+// Валидируем поля
 if (!Validator::isUserValid($data['fio'], $data['email'], $data['phone'])) {
     sendError('Проверьте корректность ввода данных');
 }
@@ -28,6 +36,7 @@ try {
     $landingPdo = new LandingPdo();
     $lastSendTime = $landingPdo->getLastSendTimeByUserEmail($data['email']);
 
+    // Проверяем прошел ли час с момента обращения. Если да, то можно отправить новое
     $now = time();
     $lastSendTime = $lastSendTime->getTimestamp();
     if ($lastSendTime) {
@@ -37,13 +46,17 @@ try {
         }
     }
 
+    // Маппим поля формы
     $fields = explode(' ', $data['fio']);
     $lastName = $fields[0];
     $firstName = $fields[1];
     $middleName = $fields[2] ?? '';
+
+    // Сохраняем пользователя и обращение
     $userId = $landingPdo->saveNewUser($lastName, $firstName, $middleName, $data['email'], $data['phone']);
     $landingPdo->saveComment($userId, $data['comment'], new DateTime());
 
+    // Формируем и отправляем письмо на email менеджера 
     $message = 'Фамилия: ' . $lastName . "\r\n" .
         'Имя: ' . $firstName . "\r\n" .
         'Отчество: ' . $middleName . "\r\n" .
@@ -56,9 +69,9 @@ try {
         $message,
         "From: " . $data['email']);
 
+    // Отправляем успешный ответ сервера
     sendJson(['success' => true]);
 
 } catch (Error $e) {
     sendError('Что-то пошло не так :(');
 }
-

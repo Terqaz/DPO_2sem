@@ -33,8 +33,8 @@ class Validator
 
     /** Проверяет поле на валидность
      * @param $name - название поля
-     * @param $value -
-     * @return bool
+     * @param $value - значение поля
+     * @return bool - валидное ли поле
      */
     public static function isFieldValid($name, $value): bool
     {

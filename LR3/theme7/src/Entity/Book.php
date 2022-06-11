@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\BookRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+// Сущность книги
 #[ORM\Entity(repositoryClass: BookRepository::class)]
 class Book
 {
@@ -13,20 +14,27 @@ class Book
     #[ORM\Column(type: 'integer')]
     private $id;
 
+    // Название
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
+    // Автор
     #[ORM\Column(type: 'string', length: 100)]
     private $author;
 
+    // URL обложки
     #[ORM\Column(type: 'string', length: 64)]
     private $coverUrl;
 
+    // URL файла с книгой
     #[ORM\Column(type: 'string', length: 64)]
     private $fileUrl;
 
+    // Дата последнего прочтения
     #[ORM\Column(type: 'datetime')]
     private $dateRead;
+
+    // Дальше - стандартные геттеры и сеттеры
 
     public function getId(): ?int
     {

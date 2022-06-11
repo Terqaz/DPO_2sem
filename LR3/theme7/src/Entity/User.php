@@ -8,6 +8,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+// Сущность пользователя
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
@@ -20,11 +21,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     private $email;
 
+    // Роли пользователя в приложении. ROLE_USER или ROLE_ADMIN
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
+    // Пароль. Хэшируется перед сохранением в БД 
     #[ORM\Column(type: 'string')]
     private $password;
+
+    // Дальше - стандартные геттеры и сеттеры кроме getRoles
 
     public function getId(): ?int
     {
@@ -59,7 +64,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // Гарантирует, что каждый пользователь имеет хотя бы роль ROLE_USER
         $roles[] = 'ROLE_USER';
 
         return array_unique($roles);

@@ -1,3 +1,4 @@
+// Ограницения полей формы
 const CONSTRAINTS = {
     fio: {
         regex: /^([А-ЯЁ][а-яё]{1,32} ){2}([А-ЯЁ][а-яё]{1,32})?$/u,
@@ -15,9 +16,12 @@ const CONSTRAINTS = {
     }
 }
 
+// Обработка события отправки формы
 $(document.form).on('submit', function (e) {
+    // Предотвращаем стандартное поведение
     e.preventDefault();
 
+    // Валидируем поля
     let isAllValid = true;
     $('.form .form__input').each(function (i, input) {
         if (isValid(input)) {
@@ -29,6 +33,7 @@ $(document.form).on('submit', function (e) {
     });
 
     if (isAllValid) {
+        // Отправляем запрос на сохранение обращения
         $.ajax({
             url: "process-form.php",
             type: 'POST',
@@ -36,6 +41,7 @@ $(document.form).on('submit', function (e) {
             data: createBody(document.form),
             success: function (data) {
                 if (data.success) {
+                    // Показываем пользователю сохраненные данные обращения
                     let form = document.form;
                     let $message = $('#message');
 
@@ -45,6 +51,7 @@ $(document.form).on('submit', function (e) {
                     appendField($message, 'Фамилия', lastName);
                     appendField($message, 'Имя', firstName);
                     appendField($message, 'Отчество', middleName);
+                    
                     appendField($message, 'Ваш email', form.email.value);
                     appendField($message, 'Ваш телефон', form.phone.value);
                     appendField($message, 'С Вами свяжутся после', data.contactTime);
@@ -52,6 +59,7 @@ $(document.form).on('submit', function (e) {
                     $message.css('display', 'block');
 
                 } else {
+                    // Выводим ошибку на форму
                     let $formError = $('#formError');
                     $formError.text(data.error);
                     $formError.css('display', 'block');
@@ -61,6 +69,10 @@ $(document.form).on('submit', function (e) {
     }
 });
 
+/** Проверка валидности поля
+ * @param input - DOM-элемент поля ввода формы
+ * @return bool - валидное ли поле
+ */
 function isValid(input) {
     let constraints = CONSTRAINTS[input.name];
     if (!constraints) {
@@ -73,6 +85,10 @@ function isValid(input) {
     return true;
 }
 
+/** Создаем тело запроса отправки формы с данными из формы
+ * @param input - DOM-элемент поля ввода формы
+ * @return bool - валидное ли поле
+ */
 function createBody() {
     let data = {};
     $('.form .form__input').each(function (i, input) {
@@ -81,6 +97,11 @@ function createBody() {
     return data;
 }
 
+/** Добавить поле для вывода данных отправленной формы пользователя
+ * @param $message - jquery-элемент для вставки поля в конец
+ * @param name - имя поля
+ * @param value - значение поля
+ */
 function appendField($message, name, value) {
     $message.append('<p>' + name + ': ' + value +'</p>');
 }

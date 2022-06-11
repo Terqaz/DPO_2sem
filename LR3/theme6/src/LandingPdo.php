@@ -38,8 +38,11 @@ class LandingPdo
                 WHERE U.email = :email';
 
         $sendDate = $this->pdo->prepare($sql);
+
         $sendDate->bindValue(':email', $email, PDO::PARAM_STR);
+
         $sendDate->execute();
+
         $lastSendDate = $sendDate->fetch(PDO::FETCH_ASSOC)['last_send_date'];
         if (isset($lastSendDate)) {
             $lastSendDate = DateTime::createFromFormat(self::DATETIME_FORMAT, $lastSendDate);
@@ -59,7 +62,9 @@ class LandingPdo
                 WHERE email = :email";
 
         $userId = $this->pdo->prepare($sql);
+
         $userId->bindValue(':email', $email, PDO::PARAM_STR);
+
         $userId->execute();
 
         $userId = $userId->fetch(PDO::FETCH_ASSOC);
@@ -74,12 +79,12 @@ class LandingPdo
     /** Сохранить нового пользователя
      * @param string $lastName
      * @param string $firstName
-     * @param string $middleName
+     * @param ?string $middleName - отчество
      * @param string $email
      * @param string $phone
-     * @return int|null
+     * @return int|null - id нового пользователя или null при ошибке сохранения
      */
-    public function saveNewUser(string $lastName, string $firstName, string $middleName, string $email, string $phone): ?int
+    public function saveNewUser(string $lastName, string $firstName, ?string $middleName, string $email, string $phone): ?int
     {
         $userId = $this->findUserByEmail($email);
         if ($userId) {
@@ -92,21 +97,24 @@ class LandingPdo
                 SELECT LAST_INSERT_ID();";
 
         $userId = $this->pdo->prepare($sql);
+
         $userId->bindValue(':lastName', $lastName, PDO::PARAM_STR);
         $userId->bindValue(':firstName', $firstName, PDO::PARAM_STR);
         $userId->bindValue(':middleName', $middleName, PDO::PARAM_STR);
         $userId->bindValue(':email', $email, PDO::PARAM_STR);
         $userId->bindValue(':phone', $phone, PDO::PARAM_STR);
+
         $userId->execute();
         $userId = $userId->fetch(PDO::FETCH_ASSOC);
+
         return $userId['LAST_INSERT_ID()'];
     }
 
 
     /** Сохранить обращение пользователя
      * @param int $userId
-     * @param string $comment
-     * @param DateTime $sendDate
+     * @param string $comment - текст обращения
+     * @param DateTime $sendDate - дата отправки обращения
      * @return void
      */
     public function saveComment(int $userId, string $comment, DateTime $sendDate): void
@@ -116,9 +124,11 @@ class LandingPdo
                 VALUES (:userId, :comment, :sendDate)";
 
         $query = $this->pdo->prepare($sql);
+
         $query->bindValue(':userId', $userId, PDO::PARAM_INT);
         $query->bindValue(':comment', $comment, PDO::PARAM_STR);
         $query->bindValue(':sendDate', $sendDate->format(self::DATETIME_FORMAT), PDO::PARAM_STR);
+
         $query->execute();
     }
 }

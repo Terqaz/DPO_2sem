@@ -2,7 +2,11 @@
 
 $metro = " не найдено";
 $token = file_get_contents('config.txt');
+
+// Получаем адрес из запроса
 $address = $_GET['address'];
+
+// Обращаемся к API для получения геокода
 $parameters = array(
   'apikey' => $token,
   'geocode' => $address,
@@ -11,6 +15,7 @@ $parameters = array(
 $buffer = file_get_contents("https://geocode-maps.yandex.ru/1.x/?" . http_build_query($parameters));
 $responceGeocode = json_decode($buffer, true);
 
+// Обрабатываем данные из ответа
 if($responceGeocode['response']['GeoObjectCollection']['metaDataProperty']['GeocoderResponseMetaData']['found'] < 1){
     $responceGeocode = [
         "data" => "Not found"
@@ -18,6 +23,7 @@ if($responceGeocode['response']['GeoObjectCollection']['metaDataProperty']['Geoc
     echo json_encode($responceGeocode, JSON_UNESCAPED_UNICODE);
     die();
 } else {
+    // Обращаемся к API для получения ближайшего метро
     $parameters = array(
         'apikey' => $token,
         'geocode' => $responceGeocode['response']['GeoObjectCollection']['featureMember'][0]['GeoObject']['Point']['pos'],

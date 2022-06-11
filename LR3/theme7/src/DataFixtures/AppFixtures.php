@@ -9,6 +9,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
+// Класс для создания фальшивых данных в БД
 class AppFixtures extends Fixture
 {
     private UserPasswordHasherInterface $userPasswordHasher;
