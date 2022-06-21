@@ -3,32 +3,19 @@
 {% block title %}Book{% endblock %}
 
 {% block body %}
-    <h1>Book</h1>
-
+    <h1>{{ book.title }}</h1>
+    <img src="/{{ book.coverUrl }}" alt="обложка" style="width: 300px">
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ book.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ book.title }}</td>
-            </tr>
-            <tr>
-                <th>Author</th>
+                <th>Автор</th>
                 <td>{{ book.author }}</td>
             </tr>
             <tr>
-                <th>CoverUrl</th>
-                <td>{{ book.coverUrl }}</td>
+                <td><a href="{{ book.fileUrl }}">Скачать</a></td>
             </tr>
             <tr>
-                <th>FileUrl</th>
-                <td>{{ book.fileUrl }}</td>
-            </tr>
-            <tr>
-                <th>DateRead</th>
+                <th>Дата прочтения</th>
                 <td>{{ book.dateRead ? book.dateRead|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
         </tbody>

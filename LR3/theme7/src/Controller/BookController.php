@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Book;
 use App\Form\BookType;
 use App\Repository\BookRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,6 +32,7 @@ class BookController extends AbstractController
      * @param $bookRepository - репозиторий для книг
      * @return Response - HTTP-ответ. Форма для создания книги или редирект на обработчик для получения каталога книг
      */
+    #[IsGranted('ROLE_USER')]
     #[Route('/new', name: 'app_book_new', methods: ['GET', 'POST'])]
     public function new(Request $request, BookRepository $bookRepository): Response
     {
